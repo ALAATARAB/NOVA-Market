@@ -33,8 +33,8 @@ exports.postProduct = [
     .notEmpty().withMessage('The description should not be empty'),
 
     body('colorsQuantity')
-    .isArray().withMessage('colors should be a array type with values like [colorName , quantity]'),
-
+    .isArray().withMessage('colorsQuantity should be an array type with values like [colorName , quantity]'),
+    
     validationResult
 ];
 
@@ -55,8 +55,7 @@ exports.updateProduct = [
     .notEmpty().withMessage('The description should not be empty'),
     
     body('colorsQuantity').optional()
-    .notEmpty().withMessage('The quantity should not be empty')
-    .isNumeric().withMessage('The price should be a number'),
+    .isArray().withMessage('colorsQuantity should be an array type with values like [colorName , quantity]'),
     
     validationResult
 ];

@@ -12,7 +12,7 @@ router.route('/')
     .put(isAuth,Validator.updateUser,updateUser)
     .delete(isAuth,Validator.deleteUser,deleteUser);
 
-router.put('/update-passwrod',isAuth,Validator.updatePassword,updatePassword);
+router.put('/update-password',isAuth,Validator.updatePassword,updatePassword);
 
 router.get('/get-users',isAdmin,Validator.getUsers,getUsers);
 
