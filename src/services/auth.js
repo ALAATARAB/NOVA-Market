@@ -33,9 +33,10 @@ exports.signUp = async (email,password,name,image)=> {
 
 exports.forgetPassword = async (userId)=> {
     try {
+        // Generate hash reset random 6 digits
         const resetCode =Math.floor(100000 + Math.random() * 900000).toString();
 
-        let passwordResetCode = resetCode;
+        let passwordResetCode = await bcryptjs.hash(resetCode,12);
         let passwordResetExpires = Date.now() + 10 * 60 * 1000;
         let passwordResetVerified = false;
         let add = {passwordResetCode,passwordResetExpires,passwordResetVerified};
@@ -67,10 +68,10 @@ exports.verfiyResetCode = async (userId,resetCode)=> {
         let user = await User.findById(userId);
         if (!user) 
             throw {message:'There is an error',statusCode:404};
-        if (user.passwordResetCode != resetCode)
-            throw {message:'The reset Code is not correct',statusCode:404};
         if (user.passwordResetExpires < Date.now()) 
             throw {message:'The reset Code is expired',statusCode:404};
+        let verfiy = await bcryptjs.compare(resetCode,user.passwordResetCode);
+        if (!verfiy) throw {message:'There is an error with password',statusCode:402};
         user.passwordResetVerified = true;
         user.passwordResetCode = undefined;
         user.passwordResetExpires = undefined;
@@ -86,7 +87,7 @@ exports.verfiyResetCode = async (userId,resetCode)=> {
 exports.resetPassword = async (userId,newPassword)=> {
     try {
         let user = await User.findById(userId);
-        if (!user) throw {message:'There is an error',statusCode:404};
+        if (!user) throw {message:'There is an error: no user',statusCode:404};
         if (!user.passwordResetVerified) throw {message:'Something goes wrong with verfication',statusCode:404};
         let bPassword = await bcryptjs.hash(newPassword,12);
         user.password = bPassword;

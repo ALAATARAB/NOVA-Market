@@ -30,7 +30,7 @@ exports.insertSubCategory = async (categoryId,subCategoryId) => {
 
 exports.removeSubCategory = async (categoryId,subCategoryId) => {
     try {
-        const category = await Category.findByIdAndUpdate(categoryId,
+        await Category.findByIdAndUpdate(categoryId,
             {$pull: { 'subCategories': subCategoryId }},
             { new: true }
         );
