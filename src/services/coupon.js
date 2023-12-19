@@ -5,7 +5,7 @@ const Factory = require('./Factory');
 exports.getCouponByTitle = async (title) => {return await Factory.getOneByQuery(Coupon,[{title}]);}
 
 // for admins
-exports.getCoupons = async (page,limit,prefix) => {
+exports.getCoupons = async (page,limit,prefix='') => {
     // we don't use Factory because coupon doesn't contains slug
     let skip = (page-1) * limit;
     return await Coupon.find({'title':{$regex:'^'+prefix}}).skip(skip).limit(limit);
